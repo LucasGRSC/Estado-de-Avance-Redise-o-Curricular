@@ -26,7 +26,7 @@ data = pd.concat([data_todas, data], ignore_index=True)
 
 # Inicializar la aplicación Dash
 app = Dash(__name__)
-server = app.server  # Agregar esta línea para que Gunicorn sepa dónde está el servidor
+server = app.server  # Añadir esta línea para que Gunicorn sepa dónde está el servidor
 
 # Función para dividir texto en líneas más cortas
 def wrap_labels(text, max_width=20):
