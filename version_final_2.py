@@ -44,6 +44,7 @@ data = pd.concat([data_todas, data], ignore_index=True)
 # Inicializar la aplicación Dash
 app = Dash(__name__)
 server = app.server  # Añadir esta línea para que Gunicorn sepa dónde está el servidor
+server.debug = True  # Forzar el modo debug en Flask
 
 # Función para dividir texto en líneas más cortas
 def wrap_labels(text, max_width=20):
@@ -143,35 +144,4 @@ def update_charts(selected_facultad, selected_producto):
     fig_niveles.add_trace(go.Bar(
         y=[selected_producto] * len(producto_niveles),
         x=producto_niveles['Nivel'],
-        text=producto_niveles['Descripción nivel de avance'],
-        texttemplate='%{text}',
-        textposition='inside',
-        insidetextanchor='middle',  # Centralizar horizontalmente las etiquetas
-        textangle=0,  # Etiquetas horizontales
-        textfont=dict(size=10),  # Tamaño de letra estandarizado
-        orientation='h',
-        marker_color=colors[columns_num.index(selected_producto) % len(colors)]
-    ))
-
-    # Personalizar la gráfica de niveles de avance
-    fig_niveles.update_layout(
-        title='Productos',  # Título del gráfico anexo
-        yaxis_title='',  # Quitar título del eje y
-        xaxis_title='',
-        barmode='stack',
-        xaxis=dict(
-            showticklabels=False  # Eliminar la graduación del eje x
-        ),
-        yaxis=dict(
-            tickvals=[selected_producto],
-            ticktext=[selected_producto]
-        ),
-        legend_title='Niveles de Avance',
-        template='plotly_white'
-    )
-
-    return fig, fig_niveles
-
-if __name__ == '__main__':
-    logger.info("Iniciando el servidor de la aplicación Dash")
-    app.run_server(debug=False)
+        text=producto_niveles['Descripción nivel de avance'
