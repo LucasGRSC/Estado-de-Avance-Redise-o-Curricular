@@ -2,4 +2,4 @@
 # Make the start script executable
 chmod +x start
 echo "Ejecutando script de inicio"
-./start
+./start > postBuild_output.log 2>&1
