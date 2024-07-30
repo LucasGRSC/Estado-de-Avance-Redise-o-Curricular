@@ -1,9 +1,11 @@
+import os
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, dcc, html, Input, Output
 
-# Ruta del archivo Excel
-file_path = r'C:\Users\Lucas\OneDrive\Escritorio\Seguimiento\Basa de datos.xlsx'
+# Obtener la ruta del directorio actual
+current_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(current_dir, 'Basa de datos.xlsx')
 
 # Cargar el archivo de Excel
 data = pd.read_excel(file_path, sheet_name='Base de datos')
@@ -17,7 +19,6 @@ niveles_maximos = niveles_avance.groupby('Producto')['Nivel'].max().to_dict()
 colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#c2c2f0', '#ffb3e6']
 columns_num = ['Planificación', 'Informe diagnóstico', 'Perfil de egreso', 'Trayectoria de aprendizajes', 'Validación externa', 'Aprobación cuerpos colegiados']
 columns_cat = ['Planificación1', 'Informe diagnóstico1', 'Perfil de egreso1', 'Trayectoria de aprendizajes1', 'Validación externa1', 'Aprobación cuerpos colegiados1']
-max_values = [niveles_maximos.get(col, 0) for col in columns_num]
 
 # Agregar opción "Todas las carreras" al DataFrame
 data_todas = pd.DataFrame([['Todas las carreras', 'Todas las carreras'] + [0] * (len(data.columns) - 2)], columns=data.columns)
@@ -53,7 +54,7 @@ app.layout = html.Div([
         clearable=False,
         style={'width': '50%', 'margin': 'auto'}
     ),
-    dcc.Graph(id='bar-chart', style={'height': '75vh'}),  # Ajustar la altura del gráfico principal
+    dcc.Graph(id='bar-chart', style={'height': '75vh'}),
     dcc.Dropdown(
         id='producto-dropdown',
         options=[{'label': producto, 'value': producto} for producto in productos],
@@ -61,8 +62,8 @@ app.layout = html.Div([
         clearable=False,
         style={'width': '50%', 'margin': 'auto'}
     ),
-    dcc.Graph(id='niveles-avance-chart', style={'height': '25vh'})  # Ajustar la altura del gráfico de niveles de avance
-], style={'height': '100vh'})  # Ajustar la altura del contenedor principal
+    dcc.Graph(id='niveles-avance-chart', style={'height': '25vh'})
+], style={'height': '100vh'})
 
 # Callback para actualizar los gráficos
 @app.callback(
@@ -91,7 +92,7 @@ def update_charts(selected_facultad, selected_producto):
                 x=filtered_data[col],
                 name=col,
                 marker_color=colors[idx % len(colors)],
-                text=filtered_data[columns_cat[idx]],  # Usar `columns_cat` para etiquetas
+                text=filtered_data[columns_cat[idx]],
                 texttemplate='%{text}',
                 textposition='inside',
                 insidetextanchor='middle',  # Centralizar horizontalmente las etiquetas
@@ -152,6 +153,5 @@ def update_charts(selected_facultad, selected_producto):
 
     return fig, fig_niveles
 
-# Ejecutar la aplicación
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8051)
+    app.run_server(debug=False)
