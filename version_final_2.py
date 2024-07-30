@@ -2,14 +2,24 @@ import os
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, dcc, html, Input, Output
+import logging
+
+# Configuración del registro
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Obtener la ruta del directorio actual
 current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, 'Basa de datos.xlsx')
+logger.info(f"Ruta del archivo de datos: {file_path}")
 
 # Cargar el archivo de Excel
-data = pd.read_excel(file_path, sheet_name='Base de datos')
-niveles_avance = pd.read_excel(file_path, sheet_name='Niveles de Avance')
+try:
+    data = pd.read_excel(file_path, sheet_name='Base de datos')
+    niveles_avance = pd.read_excel(file_path, sheet_name='Niveles de Avance')
+except Exception as e:
+    logger.error(f"Error al cargar el archivo Excel: {e}")
+    raise
 
 # Identificar los nombres de los productos y los niveles máximos para cada uno
 productos = niveles_avance['Producto'].unique()
@@ -155,4 +165,5 @@ def update_charts(selected_facultad, selected_producto):
     return fig, fig_niveles
 
 if __name__ == '__main__':
+    logger.info("Iniciando el servidor de la aplicación Dash")
     app.run_server(debug=False)
