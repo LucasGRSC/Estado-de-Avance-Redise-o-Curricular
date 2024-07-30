@@ -13,10 +13,17 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, 'Basa de datos.xlsx')
 logger.info(f"Ruta del archivo de datos: {file_path}")
 
+# Verificar existencia del archivo
+if os.path.exists(file_path):
+    logger.info(f"El archivo {file_path} existe.")
+else:
+    logger.error(f"El archivo {file_path} no existe.")
+
 # Cargar el archivo de Excel
 try:
     data = pd.read_excel(file_path, sheet_name='Base de datos')
     niveles_avance = pd.read_excel(file_path, sheet_name='Niveles de Avance')
+    logger.info("Archivos Excel cargados correctamente.")
 except Exception as e:
     logger.error(f"Error al cargar el archivo Excel: {e}")
     raise
@@ -84,6 +91,7 @@ app.layout = html.Div([
      Input('producto-dropdown', 'value')]
 )
 def update_charts(selected_facultad, selected_producto):
+    logger.info(f"Actualizando gráficos para facultad: {selected_facultad}, producto: {selected_producto}")
     if selected_facultad == 'Todas las carreras':
         filtered_data = data[data['Facultad'] != 'Todas las carreras']
     else:
