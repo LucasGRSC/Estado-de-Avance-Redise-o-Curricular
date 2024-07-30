@@ -1,4 +1,5 @@
 #!/bin/bash
 # Make the start script executable
 chmod +x start
+echo "Ejecutando script de inicio"
 ./start
